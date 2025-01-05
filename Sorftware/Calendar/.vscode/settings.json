@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "key.h": "c",
+        "delay.h": "c",
+        "bit": "cpp",
+        "compare": "cpp",
+        "limits": "cpp",
+        "new": "cpp",
+        "led.h": "c",
+        "sys.h": "c",
+        "cstdlib": "c",
+        "usart.h": "c",
+        "usmart.h": "c",
+        "lcd.h": "c",
+        "malloc.h": "c",
+        "stm32f1xx_it.h": "c",
+        "oled.h": "c",
+        "lcdfont.h": "c"
+    }
+}
