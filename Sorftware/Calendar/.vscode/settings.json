@@ -15,6 +15,10 @@
         "malloc.h": "c",
         "stm32f1xx_it.h": "c",
         "oled.h": "c",
-        "lcdfont.h": "c"
+        "lcdfont.h": "c",
+        "ds1302.h": "c",
+        "stm32f1xx_hal.h": "c",
+        "bmp.h": "c",
+        "oledfont.h": "c"
     }
 }

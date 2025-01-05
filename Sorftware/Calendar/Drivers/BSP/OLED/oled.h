@@ -1,3 +1,11 @@
+/*
+ * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @Date: 2025-01-05 08:52:11
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2025-01-05 11:48:54
+ * @FilePath: \Calendar\Drivers\BSP\OLED\oled.h
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 #ifndef __OLED_H
 #define __OLED_H 
 
@@ -53,6 +61,10 @@
 
 #define OLED_CS_Clr()  HAL_GPIO_WritePin(OLED_CS_GPIO_PORT,OLED_CS_GPIO_PIN,GPIO_PIN_RESET)//CS
 #define OLED_CS_Set()  HAL_GPIO_WritePin(OLED_CS_GPIO_PORT,OLED_CS_GPIO_PIN,GPIO_PIN_SET)
+
+
+/**********************************  ********************************************************/
+
 
 
 /********************************** oled函数定义 ********************************************************/
