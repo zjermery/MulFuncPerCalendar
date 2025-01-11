@@ -112,6 +112,7 @@ typedef struct
 
 
 void ds1302_init(void);
+// Time_s *get_time_contx(void);
 
 void ds1302_get_time(Time_s *time);
 void ds1302_set_time(const Time_s *time);

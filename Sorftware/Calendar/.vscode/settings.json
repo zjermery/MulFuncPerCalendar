@@ -19,6 +19,9 @@
         "ds1302.h": "c",
         "stm32f1xx_hal.h": "c",
         "bmp.h": "c",
-        "oledfont.h": "c"
+        "oledfont.h": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "cstdint": "c"
     }
 }

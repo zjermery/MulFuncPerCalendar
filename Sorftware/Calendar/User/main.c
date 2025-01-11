@@ -20,7 +20,7 @@ extern unsigned char BMP1[];
 extern uint8_t write[];
 extern uint8_t read[];
 uint8_t gewei[7],shiwei[7];
-Time_s newtime = {0};
+Time_s newtime;
 int main(void)
 {
     HAL_Init();                         /* ≥ı ºªØHALø‚ */
@@ -35,8 +35,8 @@ int main(void)
     while (1)
     {
 		ds1302_get_time(&newtime);
-//        printf("year:%d,month:%d,date:%d,day:%d,hour:%d,min:%d,sec:%d\r\n",newtime.year,newtime.month,newtime.date,newtime.day,newtime.hour,newtime.min,newtime.sec);
-//        printf("clockSystem:%d,clockPeriod:%s\r\n",newtime.clockSystem?12:24,newtime.clockPeriod?"PM":"AM");
+        printf("year:%d,month:%d,date:%d,day:%d,hour:%d,min:%d,sec:%d\r\n",newtime.year,newtime.month,newtime.date,newtime.day,newtime.hour,newtime.min,newtime.sec);
+        printf("clockSystem:%d,clockPeriod:%s\r\n",newtime.clockSystem?12:24,newtime.clockPeriod?"PM":"AM");
 //        delay_ms(2000);
         
 //        OLED_ShowChinese(0,0,0,16,1);//÷–
@@ -53,7 +53,7 @@ int main(void)
 		OLED_Clear();
         // OLED_ShowNum(1,1,2025,4,16,1);
         // OLED_ShowChinese(32,1,1,16,1);
-        OLED_ShowDate(1,1, newtime);
+        OLED_ShowYearDate(1,1, newtime);
 //        OLED_ShowChar(1,1,newtime,16,1);
 //        OLED_ShowChar(8,1,gewei[6],16,1);
 //        OLED_ShowChar(16,1,shiwei[5],16,1);

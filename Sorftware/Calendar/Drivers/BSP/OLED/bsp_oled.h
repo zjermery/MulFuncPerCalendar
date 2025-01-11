@@ -4,5 +4,7 @@
 
 
 void OLED_ShowDate(uint8_t x, uint8_t y, Time_s time);
-
+void OLED_ShowYearDate(uint8_t x, uint8_t y, Time_s time);
 #endif
+
+

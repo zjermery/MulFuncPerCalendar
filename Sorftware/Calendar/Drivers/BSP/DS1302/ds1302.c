@@ -11,7 +11,17 @@
 #include "delay.h"
 #include "string.h"
 
-
+Time_s g_time = {
+    SUNDAY,   // Day: 星期三
+    0,          // sec: 30秒
+    54,          // min: 45分钟
+    25,          // year: 2022年（0-99）
+    23,          // hour: 10点（24小时制）
+    7,          // date: 25号
+    1,          // month: 12月
+    DS1302_CLK_SYSTEM_24,   // clockSystem: 24小时制
+    DS1302_CLK_PM_PERIOD           // clockPeriod: 上午
+};      
 
 /**
  * @brief Clock cycle on CLK line
@@ -39,27 +49,22 @@ static void set_idle_state(void)
 }
 
 /**
- * @brief Initialize the DS1302 device
+ * @brief Initialize the DS1302 defult data
  *
  * @param void
  * @return void
  */
 static void ds1302_defult_time_config(void)
 {
-	Time_s time;
-    /* Setting Sunday 05/01/2023 10:22:0 AM */
-    time.day = SUNDAY;
-    time.year = 25;
-    time.month = 1;
-    time.date = 5;
-    time.clockSystem = DS1302_CLK_SYSTEM_12;
-    time.clockPeriod = DS1302_CLK_AM_PERIOD;
-    time.hour = 10;
-    time.min = 22;
-    time.sec = 0;
-    ds1302_set_time(&time);
+    ds1302_set_time(&g_time);
+//    printf("config time finish!\n");
 }
 
+
+// Time_s *get_time_contx(void)
+// {
+//     return &g_time;
+// }
 
 /**
  * @brief Initialize the DS1302 device
@@ -215,9 +220,9 @@ void ds1302_get_time(Time_s *time)
     {
         return;
     }
-    tmpMaskClockSystem = (time->clockSystem == DS1302_CLK_SYSTEM_24) ?MASK_HOURS_24: MASK_HOURS_12;
+    tmpMaskClockSystem = ((time->clockSystem == DS1302_CLK_SYSTEM_24) ?MASK_HOURS_24: MASK_HOURS_12);
     time->min = BCD_TO_DEC(read_data(DS1302_REG_MIN));
-    time->day = BCD_TO_DEC(read_data(DS1302_REG_DAY));
+    time->day = (Day)BCD_TO_DEC(read_data(DS1302_REG_DAY));
     time->year = BCD_TO_DEC(read_data(DS1302_REG_YEAR));
     time->date = BCD_TO_DEC(read_data(DS1302_REG_DATE));
     time->month = BCD_TO_DEC(read_data(DS1302_REG_MONTH));
