@@ -2,11 +2,13 @@
 #define __DS1302__H
 
 #include "stdint.h"
+#include "stdio.h"
 
 /* Size definitions */
 #define DS1302_DATA_SIZE            8
 #define DS1302_CMD_SIZE             8
 #define DS1302_RAM_ADDR_START       0xC0
+#define FLAG_VAL                    0xFF
 
 /* Register definition according to the spec */
 #define DS1302_REG_SEC              0x80
@@ -112,7 +114,7 @@ typedef struct
 
 
 void ds1302_init(void);
-// Time_s *get_time_contx(void);
+Time_s *get_time_contx(void);
 
 void ds1302_get_time(Time_s *time);
 void ds1302_set_time(const Time_s *time);

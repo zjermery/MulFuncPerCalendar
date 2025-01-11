@@ -22,6 +22,8 @@
         "oledfont.h": "c",
         "string.h": "c",
         "stdio.h": "c",
-        "cstdint": "c"
+        "cstdint": "c",
+        "date.h": "c",
+        "calendar.h": "c"
     }
 }

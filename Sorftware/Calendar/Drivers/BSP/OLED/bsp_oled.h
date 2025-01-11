@@ -2,9 +2,9 @@
 #define __BSP_OLED_H 
 
 
-
-void OLED_ShowDate(uint8_t x, uint8_t y, Time_s time);
-void OLED_ShowYearDate(uint8_t x, uint8_t y, Time_s time);
+void DisplayShowYearDate(uint8_t x, uint8_t y, Time_s time);
+void DisplayShowTime(uint8_t x, uint8_t y, Time_s time);
+void DisplayShowDay(uint8_t x, uint8_t y, Time_s time);
 #endif
 
 

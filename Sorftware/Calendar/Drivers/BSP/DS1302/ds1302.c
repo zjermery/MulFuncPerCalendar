@@ -23,6 +23,12 @@ Time_s g_time = {
     DS1302_CLK_PM_PERIOD           // clockPeriod: 上午
 };      
 
+
+Time_s *get_time_contx(void)
+{
+    return &g_time;
+}
+
 /**
  * @brief Clock cycle on CLK line
  * @param void
@@ -61,36 +67,6 @@ static void ds1302_defult_time_config(void)
 }
 
 
-// Time_s *get_time_contx(void)
-// {
-//     return &g_time;
-// }
-
-/**
- * @brief Initialize the DS1302 device
- *
- * @param void
- * @return void
- */
-void ds1302_init(void)
-{
-    GPIO_InitTypeDef GPIO_InitStructure;
-
-    /* Enable DWT for microseconds delay */
-//    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-//    DWT->CTRL |= 1 ;
-//    DWT->CYCCNT = 0;
-
-    /* Initialize  SCLK, SDA and RST as output, pull push and speed high */
-    GPIO_InitStructure.Pin = DS1302_CLK_GPIO_PIN | DS1302_DAT_GPIO_PIN | DS1302_RST_GPIO_PIN;
-    GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
-    GPIO_InitStructure.Mode =  GPIO_MODE_OUTPUT_PP;
-    HAL_GPIO_Init(DS1302_GPIO_PORT, &GPIO_InitStructure);
-
-    set_idle_state();
-
-	ds1302_defult_time_config();
-}
 
 /**
  * @brief Read mode: SDA pin is set as input
@@ -262,6 +238,7 @@ void ds1302_set_time(const Time_s *time)
     write_data(DS1302_REG_CONTROL, 0);
 
     /* Write time data to RTC calendar registers in BCD format */
+    write_data(DS1302_RAM_ADDR_START,FLAG_VAL);//写入已经设置时间标记
     write_data(DS1302_REG_MIN, DEC_TO_BCD(time->min));
     write_data(DS1302_REG_SEC, DEC_TO_BCD(time->sec));
     write_data(DS1302_REG_DAY, DEC_TO_BCD(time->day));
@@ -444,3 +421,56 @@ void ds1302_read_ram_burst(uint8_t len, uint8_t *buff)
     memset(buff, 0, 1);
     read_burst(D1302_RAM_BURST_MODE, len, buff);
 }
+
+
+/**
+ * @brief Initialize the DS1302 device
+ *
+ * @param void
+ * @return void
+ */
+// void ds1302_init(void)
+// {
+//     GPIO_InitTypeDef GPIO_InitStructure;
+
+//     /* Initialize  SCLK, SDA and RST as output, pull push and speed high */
+//     GPIO_InitStructure.Pin = DS1302_CLK_GPIO_PIN | DS1302_DAT_GPIO_PIN | DS1302_RST_GPIO_PIN;
+//     GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
+//     GPIO_InitStructure.Mode =  GPIO_MODE_OUTPUT_PP;
+//     HAL_GPIO_Init(DS1302_GPIO_PORT, &GPIO_InitStructure);
+
+//     set_idle_state();
+
+// 	ds1302_defult_time_config();
+// }
+
+void ds1302_init(void)
+{
+    uint16_t temp_reg;
+    GPIO_InitTypeDef GPIO_InitStructure;
+
+    /* Initialize  SCLK, SDA and RST as output, pull push and speed high */
+    GPIO_InitStructure.Pin = DS1302_CLK_GPIO_PIN | DS1302_DAT_GPIO_PIN | DS1302_RST_GPIO_PIN;
+    GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
+    GPIO_InitStructure.Mode =  GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(DS1302_GPIO_PORT, &GPIO_InitStructure);
+
+    set_idle_state();
+
+    temp_reg = read_data(DS1302_RAM_ADDR_START);  //先读TIME[7]地址的值
+
+    printf("temp_reg= 0X%x\r\n",temp_reg);
+    if(temp_reg == 0xFF)       //检验该地址的值是否被更改
+    {        
+        ;      //如果已经被更该就不用初始化了，说明曾经初始化了
+    }
+    else   //如果没有更该就初始化
+    {
+            write_data(DS1302_REG_CONTROL, 0);                //禁止写保护，就是关闭写保护功能
+            ds1302_defult_time_config();
+            write_data(DS1302_REG_CONTROL, 0x80);                //打开写保护功能
+    }
+}
+
+
+

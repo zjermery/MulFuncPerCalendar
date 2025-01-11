@@ -1,20 +1,22 @@
 #include "date.h"
 
-#define FEBRUARY		   2
-#define	STARTOFTIME		   1970
-#define SECDAY			   86400L           // 一天有多少s 
-#define SECYR			   (SECDAY * 365)
-#define	leapyear(year)	   ((year) % 4 == 0)
-#define	days_in_year(a)    (leapyear(a) ? 366 : 365)
-#define	days_in_month(a)   (month_days[(a) - 1])
 
-static int month_days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+static uint8_t month_days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+#define FEBRUARY		   2				//二月
+#define	STARTOFTIME		   1970				//计数的起始年份
+#define SEC_OF_DAY			   86400L           // 一天有多少s 
+#define SEC_OF_YEAR			   (SEC_OF_DAY * 365)
+#define	LEAP_YEAR(year)	   ((year) % 4 == 0)
+#define	DAYS_IN_YEAR(a)    (LEAP_YEAR(a) ? 366 : 365)
+#define	DAYS_IN_MONTH(a)   (month_days[(a) - 1])
+
 
 /*
  * This only works for the Gregorian calendar - i.e. after 1752 (in the UK)
  */
 // 计算公历
-void GregorianDay(struct rtc_time * tm)
+void GregorianDay(rtc_time * tm)
 {
 	int leapsToDate;
 	int lastYear;
@@ -62,7 +64,7 @@ void GregorianDay(struct rtc_time * tm)
  * will already get problems at other places on 2038-01-19 03:14:08)
  *
  */
-u32 mktimev(struct rtc_time *tm)
+uint32_t mktimev(rtc_time *tm)
 {
 	if (0 >= (int) (tm->tm_mon -= 2)) 
 	{	
@@ -72,7 +74,7 @@ u32 mktimev(struct rtc_time *tm)
 	}
 
 	return (((
-		(u32) (tm->tm_year/4 - tm->tm_year/100 + tm->tm_year/400 + 367*tm->tm_mon/12 + tm->tm_mday) +
+		(uint32_t) (tm->tm_year/4 - tm->tm_year/100 + tm->tm_year/400 + 367*tm->tm_mon/12 + tm->tm_mday) +
 			tm->tm_year*365 - 719499
 	    )*24 + tm->tm_hour /* now have hours */
 	  )*60 + tm->tm_min /* now have minutes */
@@ -81,13 +83,13 @@ u32 mktimev(struct rtc_time *tm)
 
 
 
-void to_tm(u32 tim, struct rtc_time * tm)
+void to_tm(uint32_t tim, rtc_time * tm)
 {
-	register u32    i;
+	register uint32_t    i;
 	register long   hms, day;
 
-	day = tim / SECDAY;			/* 有多少天 */
-	hms = tim % SECDAY;			/* 今天的时间，单位s */
+	day = tim / SEC_OF_DAY;			/* 有多少天 */
+	hms = tim % SEC_OF_DAY;			/* 今天的时间，单位s */
 
 	/* Hours, minutes, seconds are easy */
 	tm->tm_hour = hms / 3600;
@@ -95,22 +97,22 @@ void to_tm(u32 tim, struct rtc_time * tm)
 	tm->tm_sec = (hms % 3600) % 60;
 
 	/* Number of years in days */ /*算出当前年份，起始的计数年份为1970年*/
-	for (i = STARTOFTIME; day >= days_in_year(i); i++) 
+	for (i = STARTOFTIME; day >= DAYS_IN_YEAR(i); i++) 
 	{
-		day -= days_in_year(i);
+		day -= DAYS_IN_YEAR(i);
 	}
 	tm->tm_year = i;
 
 	/* Number of months in days left */ /*计算当前的月份*/
-	if (leapyear(tm->tm_year)) 
+	if (LEAP_YEAR(tm->tm_year)) 
 	{
-		days_in_month(FEBRUARY) = 29;
+		DAYS_IN_MONTH(FEBRUARY) = 29;
 	}
-	for (i = 1; day >= days_in_month(i); i++) 
+	for (i = 1; day >= DAYS_IN_MONTH(i); i++) 
 	{
-		day -= days_in_month(i);
+		day -= DAYS_IN_MONTH(i);
 	}
-	days_in_month(FEBRUARY) = 28;
+	DAYS_IN_MONTH(FEBRUARY) = 28;
 	tm->tm_mon = i;
 
 	/* Days are what is left over (+1) from all that. *//*计算当前日期*/

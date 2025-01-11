@@ -2,16 +2,9 @@
 #include "stdlib.h"
 #include "oledfont.h"  	 
 #include "delay.h"
-#include "string.h"
-#include "stdio.h"
 
 
-uint8_t OLED_GRAM[144][8];
-
-#define MAPPING_SIZE (sizeof(mapping) / sizeof(mapping[0]))
-
-
-
+static uint8_t OLED_GRAM[144][8];
 
 
 /**
@@ -409,22 +402,30 @@ void OLED_ShowChinese(uint8_t x,uint8_t y,uint8_t num,uint8_t size1,uint8_t mode
 	}
 }
 
-void OLED_ShowChinese1(uint8_t x,uint8_t y,unsigned short Index,uint8_t size1,uint8_t mode)
+static uint8_t find_index(uint16_t Index)
 {
-	uint8_t m,temp;
-	uint8_t x0 = x,y0 = y;
-
-	uint16_t i,size3 = (size1 / 8 + ((size1 % 8) ? 1 : 0)) * size1;  //得到字体一个字符对应点阵集所占的字节数
-
+	uint8_t i;
+	// printf("Index = 0X%X\r\n",Index);
 	for(i = 0; i < sizeof(GB16_FONT_MASK) / 34; i++){//查数组
 		if(Index == GB16_FONT_MASK[i].Index){
-			temp = GB16_FONT_MASK[i].MASK[]
+			return i;
 		}
 	}
-	for(i = 0; i < size3; i++)
+	return NOT_FOUND;
+}
+
+static void OLED_ShowChineseGbk(uint8_t x,uint8_t y,uint16_t Index,uint8_t size1,uint8_t mode)
+{
+	uint16_t i,j;
+	uint8_t x0 = x,y0 = y;
+	uint8_t temp, size2 = (size1 / 8 + ((size1 % 8) ? 1 : 0)) * size1; 
+	uint8_t index = find_index(Index);
+	// printf("index = %d\r\n",index);
+	
+	for(i = 0; i < size2; i++)
 	{
-		temp = GB16_FONT_MASK[i].MASK[i];
-		for(m = 0;m < 8; m++)
+		temp = GB16_FONT_MASK[index].MASK[i];
+		for(j = 0; j < 8; j++)
 		{
 			if(temp & 0x01)
 				OLED_DrawPoint(x,y,mode);
@@ -434,20 +435,20 @@ void OLED_ShowChinese1(uint8_t x,uint8_t y,unsigned short Index,uint8_t size1,ui
 			y++;
 		}
 		x++;
-		if((x-x0) == size1){
+		if((x - x0) == size1){
 			x = x0;
 			y0 += 8 ;
 		}
-		y=y0;
+		y = y0;
 	}
 }
 
 //坐标设置
-static void OLED_Set_Pos(unsigned char x, unsigned char y) 
-{ 	OLED_WR_Byte(0xb0 + y,OLED_WRITE_CMD);
-	OLED_WR_Byte(((x & 0xf0) >> 4) | 0x10,OLED_WRITE_CMD);
-	OLED_WR_Byte((x & 0x0f),OLED_WRITE_CMD); 
-}
+// static void OLED_Set_Pos(unsigned char x, unsigned char y) 
+// { 	OLED_WR_Byte(0xb0 + y,OLED_WRITE_CMD);
+// 	OLED_WR_Byte(((x & 0xf0) >> 4) | 0x10,OLED_WRITE_CMD);
+// 	OLED_WR_Byte((x & 0x0f),OLED_WRITE_CMD); 
+// }
 
 
 /*
@@ -457,10 +458,10 @@ static void OLED_Set_Pos(unsigned char x, unsigned char y)
 */
 void OLED_ShowChineseString(uint8_t x, uint8_t y, char *str,uint8_t size1,uint8_t mode)
 {
-	unsigned char i, k, t, length;
+	unsigned char k,length;
 	unsigned short Index = 0;
 	length = strlen(str);//取字符串总长
-	//printf("length = %d\r\n",length);
+
 	for(k = 0; k < length; k++)
 	{
 		//printf("k = %d\r\n",k);
@@ -468,31 +469,28 @@ void OLED_ShowChineseString(uint8_t x, uint8_t y, char *str,uint8_t size1,uint8_
 		{
 			//printf("ascii\r\n");
 			OLED_ShowChar(x,y,*(str + k),size1,mode);
-			// x += 8;//x坐标右移8
+			x += 8;
 		}
 		else if(*(str + k) > 127)	//大于127，为汉字，前后两个组成汉字内码
 		{
 			//printf("汉字\r\n");
 			Index = (*(str + k) << 8) | (*(str + k + 1));//取汉字的内码
-			for(i = 0; i < sizeof(GB16_FONT_MASK) / 34; i++){//查数组
-				if(Index == GB16_FONT_MASK[i].Index){
-					//查询到这个字
-					// OLED_Set_Pos(x,y);	
-					// for(t=0;t<16;t++)
-					// 	OLED_WR_Byte(GB16_FONT_MASK[i].MASK[t],OLED_WRITE_DATA);//写入字模
-
-					// OLED_Set_Pos(x,y+1);	
-					// for(t=16;t<32;t++)
-					// 	OLED_WR_Byte(GB16_FONT_MASK[i].MASK[t],OLED_WRITE_DATA);
-					OLED_ShowChinese
-					// x += 16;
-					// k += 1; //汉字占2B,跳过一个	
-				}
-			}	
+			// printf("Index1 = 0X%X\r\n",Index);
+			OLED_ShowChineseGbk(x,y,Index,size1,mode);	
+			x += 16;//x坐标右移16
+			k += 1; //汉字占2B,跳过一个
 		}
 	}
 }
-
+void OLED_ShowYearDate(uint8_t x, uint8_t y, Time_s time)
+{
+    // 计算日期字符串
+    char dateStr[20];  // 假设最大长度不超过20字符
+    snprintf(dateStr, sizeof(dateStr), "%04d年%02d月%02d日", (time.year + 2000), time.month, time.date);
+    // 使用OLED_ShowString一次性显示日期字符串
+    OLED_ShowChineseString(x, y, dateStr, 16, 1);
+	
+}
 
 //num 显示汉字的个数
 //space 每一遍显示的间隔
@@ -541,7 +539,7 @@ void OLED_ScrollDisplay(uint8_t num,uint8_t space,uint8_t mode)
 //sizex,sizey,图片长宽
 //BMP[]：要写入的图片数组
 //mode:0,反色显示;1,正常显示
-void OLED_ShowPicture(uint8_t x,uint8_t y,uint8_t sizex,uint8_t sizey,uint8_t BMP[],uint8_t mode)
+void OLED_ShowPicture(uint8_t x,uint8_t y,uint8_t sizex,uint8_t sizey,const unsigned char BMP[],uint8_t mode)
 {
 	uint16_t j=0;
 	uint8_t i,n,temp,m;
@@ -549,7 +547,7 @@ void OLED_ShowPicture(uint8_t x,uint8_t y,uint8_t sizex,uint8_t sizey,uint8_t BM
 	sizey = sizey / 8 + ((sizey % 8) ? 1 : 0);
 	for(n = 0; n < sizey; n++)
 	{
-		 for(i=0;i<sizex;i++)
+		 for(i = 0;i < sizex; i++)
 		 {
 				temp = BMP[j];
 				j++;
@@ -563,7 +561,7 @@ void OLED_ShowPicture(uint8_t x,uint8_t y,uint8_t sizex,uint8_t sizey,uint8_t BM
 					y++;
 				}
 				x++;
-				if((x-x0) == sizex)
+				if((x - x0) == sizex)
 				{
 					x = x0;
 					y0 += 8;

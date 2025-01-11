@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2025-01-05 08:52:11
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2025-01-05 14:45:35
+ * @LastEditTime: 2025-01-11 18:26:47
  * @FilePath: \Calendar\User\main.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,12 +15,16 @@
 #include "./MALLOC/malloc.h"
 #include "./BSP/DS1302/ds1302.h"
 #include "./BSP/OLED/bsp_oled.h"
+#include "./BSP/OLED/bmp.h"
+
 
 extern unsigned char BMP1[];
-extern uint8_t write[];
-extern uint8_t read[];
-uint8_t gewei[7],shiwei[7];
+extern const unsigned char thermometer23x44[138];
+extern const unsigned char Temperature_and_humidity23x44[];
 Time_s newtime;
+
+
+
 int main(void)
 {
     HAL_Init();                         /* 初始化HAL库 */
@@ -34,9 +38,9 @@ int main(void)
 
     while (1)
     {
-		ds1302_get_time(&newtime);
-        printf("year:%d,month:%d,date:%d,day:%d,hour:%d,min:%d,sec:%d\r\n",newtime.year,newtime.month,newtime.date,newtime.day,newtime.hour,newtime.min,newtime.sec);
-        printf("clockSystem:%d,clockPeriod:%s\r\n",newtime.clockSystem?12:24,newtime.clockPeriod?"PM":"AM");
+		// ds1302_get_time(&newtime);
+        // printf("year:%d,month:%d,date:%d,day:%d,hour:%d,min:%d,sec:%d\r\n",newtime.year,newtime.month,newtime.date,newtime.day,newtime.hour,newtime.min,newtime.sec);
+        // printf("clockSystem:%d,clockPeriod:%s\r\n",newtime.clockSystem?12:24,newtime.clockPeriod?"PM":"AM");
 //        delay_ms(2000);
         
 //        OLED_ShowChinese(0,0,0,16,1);//中
@@ -49,11 +53,13 @@ int main(void)
         // printf("key0:%d,key1:%d,wkup:%d\r\n",KEY0,KEY1,WK_UP);
         // OLED_ShowPicture(0,0,128,64,BMP1,1);
 		OLED_Refresh();
-		delay_ms(500);
+		delay_ms(5);
 		OLED_Clear();
         // OLED_ShowNum(1,1,2025,4,16,1);
         // OLED_ShowChinese(32,1,1,16,1);
-        OLED_ShowYearDate(1,1, newtime);
+        // DisplayShowYearDate(1,1, newtime);
+        OLED_ShowPicture(0,0,30,44,Temperature_and_humidity23x44,1);
+//        OLED_ShowChineseGbk(32,1,(uint16_t)'星' ,16,1);
 //        OLED_ShowChar(1,1,newtime,16,1);
 //        OLED_ShowChar(8,1,gewei[6],16,1);
 //        OLED_ShowChar(16,1,shiwei[5],16,1);
