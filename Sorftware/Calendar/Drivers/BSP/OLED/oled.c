@@ -482,15 +482,6 @@ void OLED_ShowChineseString(uint8_t x, uint8_t y, char *str,uint8_t size1,uint8_
 		}
 	}
 }
-void OLED_ShowYearDate(uint8_t x, uint8_t y, Time_s time)
-{
-    // 计算日期字符串
-    char dateStr[20];  // 假设最大长度不超过20字符
-    snprintf(dateStr, sizeof(dateStr), "%04d年%02d月%02d日", (time.year + 2000), time.month, time.date);
-    // 使用OLED_ShowString一次性显示日期字符串
-    OLED_ShowChineseString(x, y, dateStr, 16, 1);
-	
-}
 
 //num 显示汉字的个数
 //space 每一遍显示的间隔

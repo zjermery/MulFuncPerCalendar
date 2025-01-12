@@ -1,3 +1,11 @@
+/*
+ * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @Date: 2025-01-11 09:44:40
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2025-01-12 16:14:21
+ * @FilePath: \Calendar\Drivers\SYSTEM\usart\usart.h
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /**
  ****************************************************************************************************
  * @file        usart.h
@@ -30,24 +38,44 @@
 #include "stdio.h"
 #include "./SYSTEM/sys/sys.h"
 
+typedef enum{
+    USART_1 = 1,
+    USART_2,
+    USART_3,
+}usart_port_t;
 
 /******************************************************************************************/
 /* 引脚 和 串口 定义 
  * 默认是针对USART1的.
  * 注意: 通过修改这几个宏定义,可以支持USART1~UART5任意一个串口.
  */
-#define USART_TX_GPIO_PORT                  GPIOA
-#define USART_TX_GPIO_PIN                   GPIO_PIN_9
-#define USART_TX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PA口时钟使能 */
+#define USART1_TX_GPIO_PORT                  GPIOA
+#define USART1_TX_GPIO_PIN                   GPIO_PIN_9
+#define USART1_TX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PA口时钟使能 */
 
-#define USART_RX_GPIO_PORT                  GPIOA
-#define USART_RX_GPIO_PIN                   GPIO_PIN_10
-#define USART_RX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PA口时钟使能 */
+#define USART1_RX_GPIO_PORT                  GPIOA
+#define USART1_RX_GPIO_PIN                   GPIO_PIN_10
+#define USART1_RX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PA口时钟使能 */
 
-#define USART_UX                            USART1
-#define USART_UX_IRQn                       USART1_IRQn
-#define USART_UX_IRQHandler                 USART1_IRQHandler
-#define USART_UX_CLK_ENABLE()               do{ __HAL_RCC_USART1_CLK_ENABLE(); }while(0)  /* USART1 时钟使能 */
+#define USART_UX1                            USART1
+#define USART_UX1_IRQn                       USART1_IRQn
+#define USART_UX1_IRQHandler                 USART1_IRQHandler
+#define USART_UX1_CLK_ENABLE()               do{ __HAL_RCC_USART1_CLK_ENABLE(); }while(0)  /* USART1 时钟使能 */
+
+/****USART2******/
+#define USART2_TX_GPIO_PORT                  GPIOA
+#define USART2_TX_GPIO_PIN                   GPIO_PIN_3
+#define USART2_TX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PA口时钟使能 */
+
+#define USART2_RX_GPIO_PORT                  GPIOA
+#define USART2_RX_GPIO_PIN                   GPIO_PIN_2
+#define USART2_RX_GPIO_CLK_ENABLE()          do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)   /* PA口时钟使能 */
+
+#define USART_UX2                            USART2
+#define USART_UX2_IRQn                       USART2_IRQn
+#define USART_UX2_IRQHandler                 USART2_IRQHandler
+#define USART_UX2_CLK_ENABLE()               do{ __HAL_RCC_USART2_CLK_ENABLE(); }while(0)  /* USART1 时钟使能 */
+
 
 /******************************************************************************************/
 
@@ -56,6 +84,7 @@
 #define RXBUFFERSIZE   1                        /* 缓存大小 */
 
 extern UART_HandleTypeDef g_uart1_handle;       /* HAL UART句柄 */
+extern UART_HandleTypeDef g_uart2_handle;       /* HAL UART句柄 */
 
 extern uint8_t  g_usart_rx_buf[USART_REC_LEN];  /* 接收缓冲,最大USART_REC_LEN个字节.末字节为换行符 */
 extern uint16_t g_usart_rx_sta;                 /* 接收状态标记 */

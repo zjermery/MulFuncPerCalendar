@@ -24,6 +24,8 @@
         "stdio.h": "c",
         "cstdint": "c",
         "date.h": "c",
-        "calendar.h": "c"
+        "calendar.h": "c",
+        "bsp_oled.h": "c",
+        "dht11.h": "c"
     }
 }
