@@ -86,8 +86,8 @@ uint8_t DHT11_Read_Data(uint32_t *tempAndhumi)
 		}
 		if((buf[0]+buf[1]+buf[2]+buf[3])==buf[4])
 		{
-			printf("DHT11 Read Success!\r\n");
-			printf("tmperature:%02d.%02d¡æ,humidity:%02d.%02d%%\r\n",buf[0],buf[1],buf[2],buf[3]);
+			// printf("DHT11 Read Success!\r\n");
+			// printf("tmperature:%02d.%02d¡æ,humidity:%02d.%02d%%\r\n",buf[2],buf[3],buf[0],buf[1]);
 			*tempAndhumi = ((buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3]);
 		}
 	}

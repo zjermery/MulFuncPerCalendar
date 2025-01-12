@@ -49,7 +49,7 @@ int main(void)
 		OLED_Refresh();
 		delay_ms(1000);
 		OLED_Clear();
-       DisplayShowTempHumi(35,10,tempAndhumi);
+      DisplayShowTempHumi(35,10,tempAndhumi);
        
         // OLED_ShowNum(1,1,2025,4,16,1);
         // OLED_ShowChinese(32,1,1,16,1);
