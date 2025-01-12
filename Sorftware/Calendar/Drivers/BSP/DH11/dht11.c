@@ -1,6 +1,6 @@
 #include "dht11.h"
 #include "delay.h"
-      
+#include "stdio.h"
 		
 //复位DHT11
 void DHT11_Rst(void)	   
@@ -19,14 +19,14 @@ uint8_t DHT11_Check(void)
 {   
 	uint8_t retry=0;
 	DHT11_Mode(IN);//SET INPUT	 
-    while ((DHT11_READ_DATA()) && retry < 100)//DHT11会拉低40~80us
+    while (!DHT11_READ_DATA() && retry < 100)//DHT11会拉低40~80us
 	{
 		retry++;
 		delay_us(1);
 	};	 
 	if(retry >= 100)return 1;
 	else retry=0;
-    while (!(DHT11_READ_DATA()) && retry<100)//DHT11拉低后会再次拉高40~80us
+    while (DHT11_READ_DATA() && retry<100)//DHT11拉低后会再次拉高40~80us
 	{
 		retry++;
 		delay_us(1);
@@ -40,13 +40,13 @@ uint8_t DHT11_Check(void)
 uint8_t DHT11_Read_Bit(void) 			 
 {
  	uint8_t retry=0;
-	while((DHT11_READ_DATA() == 1) && retry<100)//等待变为低电平
+	while(DHT11_READ_DATA() && retry<100)//等待变为低电平
 	{
 		retry++;
 		delay_us(1);
 	}
 	retry=0;
-	while((DHT11_READ_DATA() == 0)&& retry<100)//等待变高电平
+	while(!DHT11_READ_DATA()&& retry<100)//等待变高电平
 	{
 		retry++;
 		delay_us(1);
@@ -73,7 +73,7 @@ uint8_t DHT11_Read_Byte(void)
 //temp:温度值(范围:0~50°)
 //humi:湿度值(范围:20%~90%)
 //返回值：0,正常;1,读取失败
-uint8_t DHT11_Read_Data(uint8_t *temp,uint8_t *humi)    
+uint8_t DHT11_Read_Data(uint32_t *tempAndhumi)    
 {        
  	uint8_t buf[5];
 	uint8_t i;
@@ -86,8 +86,9 @@ uint8_t DHT11_Read_Data(uint8_t *temp,uint8_t *humi)
 		}
 		if((buf[0]+buf[1]+buf[2]+buf[3])==buf[4])
 		{
-			*humi=buf[0];
-			*temp=buf[2];
+			printf("DHT11 Read Success!\r\n");
+			printf("tmperature:%02d.%02d℃,humidity:%02d.%02d%%\r\n",buf[0],buf[1],buf[2],buf[3]);
+			*tempAndhumi = ((buf[0] << 24) | (buf[1] << 16) | (buf[2] << 8) | buf[3]);
 		}
 	}
 	else return 1;

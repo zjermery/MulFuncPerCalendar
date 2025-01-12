@@ -29,7 +29,8 @@
 
  
 uint8_t DHT11_Init(void);//初始化DHT11
-uint8_t DHT11_Read_Data(uint8_t *temp,uint8_t *humi);//读取温湿度数据
+// uint8_t DHT11_Read_Data(uint8_t *temp,uint8_t *humi);//读取温湿度数据
+uint8_t DHT11_Read_Data(uint32_t *tempAndhumi);  
 uint8_t DHT11_Read_Byte(void);//读取一个字节的数据
 uint8_t DHT11_Read_Bit(void);//读取一位的数据
 void DHT11_Mode(uint8_t mode);//DHT11引脚输出模式控制

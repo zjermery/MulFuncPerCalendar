@@ -79,19 +79,29 @@ void DisplayShowDay(uint8_t x, uint8_t y, Time_s time)
 
 
 
-void DisplayShowTemp(uint8_t x, uint8_t y, uint8_t temp)
+uint8_t DisplayShowTempHumi(uint8_t x, uint8_t y, uint32_t tempAndhumi)
 {
     char dateStr[20];  // 假设最大长度不超过20字符
-    snprintf(dateStr, sizeof(dateStr), "湿度:%02d%%", temp);
+    uint8_t buf[4];
+    extern const unsigned char Temperature_and_humidity30x44[];
+    if(x > 40 || y > 20 )
+    {
+        return 1;
+    }
+      // 将温度值拆分为四个字节
+    buf[0] = (tempAndhumi >> 24) & 0xFF;  // 获取最高字节
+    buf[1] = (tempAndhumi >> 16) & 0xFF;  // 获取次高字节
+    buf[2] = (tempAndhumi >> 8) & 0xFF;   // 获取次低字节
+    buf[3] = tempAndhumi & 0xFF;          // 获取最低字节
+    OLED_ShowPicture(0,10,30,44,Temperature_and_humidity30x44,1);
+    snprintf(dateStr, sizeof(dateStr), "湿度:%02d.%02d%%", buf[0],buf[1]);
     OLED_ShowChineseString(x, y, dateStr, FONT_SIZE, SHOW_MODE);
+    y += 25;
+    snprintf(dateStr, sizeof(dateStr), "温度:%02d.%02d℃", buf[2],buf[3]);
+    OLED_ShowChineseString(x, y, dateStr, FONT_SIZE, SHOW_MODE);
+    return 0;
 }
 
-void DisplayShowHum(uint8_t x, uint8_t y, uint8_t hum)
-{
-    char dateStr[20];  // 假设最大长度不超过20字符
-    snprintf(dateStr, sizeof(dateStr), "温度:%02d℃", hum);
-    OLED_ShowChineseString(x, y, dateStr, FONT_SIZE, SHOW_MODE);
-}
-  
+
 
 

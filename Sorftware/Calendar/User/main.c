@@ -20,13 +20,13 @@
 
 extern unsigned char BMP1[];
 extern const unsigned char thermometer23x44[138];
-extern const unsigned char Temperature_and_humidity30x44[];
+
 extern unsigned int rec_data[4];
 
 Time_s newtime;
 
-uint8_t temp,hum;
-
+uint32_t tempAndhumi = 0;
+uint8_t buf[4];
 int main(void)
 {
     HAL_Init();                         /* ≥ı ºªØHALø‚ */
@@ -44,15 +44,13 @@ int main(void)
 		// ds1302_get_time(&newtime);
         // printf("year:%d,month:%d,date:%d,day:%d,hour:%d,min:%d,sec:%d\r\n",newtime.year,newtime.month,newtime.date,newtime.day,newtime.hour,newtime.min,newtime.sec);
         // printf("clockSystem:%d,clockPeriod:%s\r\n",newtime.clockSystem?12:24,newtime.clockPeriod?"PM":"AM");
-        DHT11_Read_Data(&temp,&hum);
-        printf("temp:%d,hum:%d\r\n",temp,hum);
-
+    DHT11_Read_Data(&tempAndhumi);
+    // printf("tmperature:%02d.%02d°Ê,humidity:%02d.%02d%%\r\n",buf[0],buf[1],buf[2],buf[3]);
 		OLED_Refresh();
 		delay_ms(1000);
 		OLED_Clear();
-        OLED_ShowPicture(0,10,30,44,Temperature_and_humidity30x44,1);
-        DisplayShowTemp(35,10,temp);
-        DisplayShowHum(35,35,hum);
+       DisplayShowTempHumi(35,10,tempAndhumi);
+       
         // OLED_ShowNum(1,1,2025,4,16,1);
         // OLED_ShowChinese(32,1,1,16,1);
         // DisplayShowYearDate(1,1, newtime);

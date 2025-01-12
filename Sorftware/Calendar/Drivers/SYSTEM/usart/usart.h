@@ -38,12 +38,6 @@
 #include "stdio.h"
 #include "./SYSTEM/sys/sys.h"
 
-typedef enum{
-    USART_1 = 1,
-    USART_2,
-    USART_3,
-}usart_port_t;
-
 /******************************************************************************************/
 /* 引脚 和 串口 定义 
  * 默认是针对USART1的.

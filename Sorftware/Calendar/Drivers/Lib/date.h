@@ -14,8 +14,8 @@ typedef struct
 	int tm_wday;          // ÷‹
 }rtc_time;
     
-void GregorianDay( rtc_time * tm);
-uint32_t mktimev( rtc_time *tm);
+void GregorianDay(rtc_time * tm);
+uint32_t mktimev(rtc_time *tm);
 void to_tm(uint32_t tim,  rtc_time * tm);
 
 #endif
