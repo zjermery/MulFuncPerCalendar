@@ -17,6 +17,7 @@
 #include "./BSP/OLED/bsp_oled.h"
 #include "./BSP/OLED/bmp.h"
 #include "./BSP/DH11/dht11.h"
+#include "./BSP/BEEP/beep.h"
 
 extern unsigned char BMP1[];
 extern const unsigned char thermometer23x44[138];
@@ -37,6 +38,7 @@ int main(void)
     OLED_Init();
 	ds1302_init(); 
     DHT11_Init();
+	beep_init();
 	printf("init finish\n");
 
     while (1)
@@ -51,6 +53,7 @@ int main(void)
 		OLED_Clear();
       DisplayShowTempHumi(35,10,tempAndhumi);
        
+       BEEP_TOGGLE();
         // OLED_ShowNum(1,1,2025,4,16,1);
         // OLED_ShowChinese(32,1,1,16,1);
         // DisplayShowYearDate(1,1, newtime);

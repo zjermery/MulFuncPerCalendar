@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers\;..\..\User;..\..\Middlewares;..\..\Drivers\BSP\OLED;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\usart;..\..\Drivers\BSP\DS1302;..\..\Drivers\BSP\DH11;..\..\Drivers\Lib</IncludePath>
+              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers\;..\..\User;..\..\Middlewares;..\..\Drivers\BSP\OLED;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\usart;..\..\Drivers\BSP\DS1302;..\..\Drivers\BSP\DH11;..\..\Drivers\Lib;..\..\Drivers\BSP\BEEP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -537,6 +537,11 @@
               <FileName>dht11.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\DH11\dht11.c</FilePath>
+            </File>
+            <File>
+              <FileName>beep.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\BSP\BEEP\beep.c</FilePath>
             </File>
           </Files>
         </Group>
