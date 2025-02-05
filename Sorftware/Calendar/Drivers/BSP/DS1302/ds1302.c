@@ -10,18 +10,9 @@
 #include "sys.h"
 #include "delay.h"
 #include "string.h"
+#include "error_code.h"
 
-Time_s g_time = {
-    SUNDAY,   // Day: 星期三
-    0,          // sec: 30秒
-    54,          // min: 45分钟
-    25,          // year: 2022年（0-99）
-    23,          // hour: 10点（24小时制）
-    7,          // date: 25号
-    1,          // month: 12月
-    DS1302_CLK_SYSTEM_24,   // clockSystem: 24小时制
-    DS1302_CLK_PM_PERIOD           // clockPeriod: 上午
-};      
+static Time_s g_time = {0};      
 
 
 Time_s *get_time_contx(void)
@@ -62,10 +53,17 @@ static void set_idle_state(void)
  */
 static void ds1302_defult_time_config(void)
 {
+    g_time.day = SUNDAY;                                // Day: 星期三
+    g_time.sec =  0;                                    // sec: 30秒
+    g_time.min = 54;                                    // min: 45分钟
+    g_time.year = 25;                                   // year: 2022年（0-99）
+    g_time.hour = 23;                                   // hour: 10点（24小时制）
+    g_time.date = 25;                                   // date: 25号
+    g_time.month = 12;                                  // month: 12月
+    g_time.clockSystem = DS1302_CLK_SYSTEM_24;          // clockSystem: 24小时制
+    g_time.clockPeriod = DS1302_CLK_PM_PERIOD;          // clockPeriod: 上午
     ds1302_set_time(&g_time);
-//    printf("config time finish!\n");
 }
-
 
 
 /**
@@ -188,22 +186,20 @@ static uint8_t read_data(uint8_t addr)
  * @param time pointer to time structure
  * @return void
  */
-void ds1302_get_time(Time_s *time)
+Time_s *ds1302_get_time(void)
 {
     uint8_t tmpMaskClockSystem = 0;
 
-    if (time == NULL)
-    {
-        return;
-    }
-    tmpMaskClockSystem = ((time->clockSystem == DS1302_CLK_SYSTEM_24) ?MASK_HOURS_24: MASK_HOURS_12);
-    time->min = BCD_TO_DEC(read_data(DS1302_REG_MIN));
-    time->day = (Day)BCD_TO_DEC(read_data(DS1302_REG_DAY));
-    time->year = BCD_TO_DEC(read_data(DS1302_REG_YEAR));
-    time->date = BCD_TO_DEC(read_data(DS1302_REG_DATE));
-    time->month = BCD_TO_DEC(read_data(DS1302_REG_MONTH));
-    time->sec = BCD_TO_DEC((read_data(DS1302_REG_SEC) & MASK_SECONDS));
-    time->hour = BCD_TO_DEC((read_data(DS1302_REG_HOUR) & tmpMaskClockSystem));
+    tmpMaskClockSystem = ((g_time.clockSystem == DS1302_CLK_SYSTEM_24) ?MASK_HOURS_24: MASK_HOURS_12);
+    g_time.min = BCD_TO_DEC(read_data(DS1302_REG_MIN));
+    g_time.day = (Day)BCD_TO_DEC(read_data(DS1302_REG_DAY));
+    g_time.year = BCD_TO_DEC(read_data(DS1302_REG_YEAR));
+    g_time.date = BCD_TO_DEC(read_data(DS1302_REG_DATE));
+    g_time.month = BCD_TO_DEC(read_data(DS1302_REG_MONTH));
+    g_time.sec = BCD_TO_DEC((read_data(DS1302_REG_SEC) & MASK_SECONDS));
+    g_time.hour = BCD_TO_DEC((read_data(DS1302_REG_HOUR) & tmpMaskClockSystem));
+    
+    return &g_time;
 }
 
 /**
@@ -212,14 +208,9 @@ void ds1302_get_time(Time_s *time)
  * @param time pointer to time structure
  * @return void
  */
-void ds1302_set_time(const Time_s *time)
-{
+error_code_t ds1302_set_time(Time_s *time)
+{    
     uint8_t tmpMaskClockSystem = 0;
-
-    if (time == NULL)
-    {
-        return;
-    }
 
     /* When 12 clock system is set, bit 7 should be high 
      * according to the spec, low for 24 clock system.
@@ -249,7 +240,9 @@ void ds1302_set_time(const Time_s *time)
 
     /* Disable write by driving protected bit to 1 */
     write_data(DS1302_REG_CONTROL, 0x80);
+    return ERROR_CODE_SUCCESS;
 }
+
 
 /**
  * @brief Write to RAM, valid addresses 0 - 30
@@ -429,21 +422,6 @@ void ds1302_read_ram_burst(uint8_t len, uint8_t *buff)
  * @param void
  * @return void
  */
-// void ds1302_init(void)
-// {
-//     GPIO_InitTypeDef GPIO_InitStructure;
-
-//     /* Initialize  SCLK, SDA and RST as output, pull push and speed high */
-//     GPIO_InitStructure.Pin = DS1302_CLK_GPIO_PIN | DS1302_DAT_GPIO_PIN | DS1302_RST_GPIO_PIN;
-//     GPIO_InitStructure.Speed = GPIO_SPEED_HIGH;
-//     GPIO_InitStructure.Mode =  GPIO_MODE_OUTPUT_PP;
-//     HAL_GPIO_Init(DS1302_GPIO_PORT, &GPIO_InitStructure);
-
-//     set_idle_state();
-
-// 	ds1302_defult_time_config();
-// }
-
 void ds1302_init(void)
 {
     uint16_t temp_reg;

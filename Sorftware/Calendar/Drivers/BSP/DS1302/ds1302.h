@@ -3,6 +3,7 @@
 
 #include "stdint.h"
 #include "stdio.h"
+#include  "error_code.h"
 
 /* Size definitions */
 #define DS1302_DATA_SIZE            8
@@ -116,9 +117,8 @@ typedef struct
 void ds1302_init(void);
 Time_s *get_time_contx(void);
 
-void ds1302_get_time(Time_s *time);
-void ds1302_set_time(const Time_s *time);
-
+// void ds1302_get_time(Time_s *time);
+error_code_t ds1302_set_time(Time_s *time);
 void ds1302_clear_ram(void);
 uint8_t ds1302_read_ram(const uint8_t addr);
 void ds1302_write_ram(const uint8_t addr, uint8_t data);
