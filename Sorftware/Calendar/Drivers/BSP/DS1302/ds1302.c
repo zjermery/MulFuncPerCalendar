@@ -12,7 +12,7 @@
 #include "string.h"
 #include "error_code.h"
 
-static Time_s g_time = {0};      
+static Time_s g_time;      
 
 
 Time_s *get_time_contx(void)

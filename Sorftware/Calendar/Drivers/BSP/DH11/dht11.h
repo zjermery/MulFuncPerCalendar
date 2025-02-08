@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2025-01-12 17:00:17
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2025-01-22 14:48:24
+ * @LastEditTime: 2025-02-08 11:34:04
  * @FilePath: \Calendar\Drivers\BSP\DH11\dht11.h
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -28,7 +28,10 @@
 #define DHT11_High                     HAL_GPIO_WritePin(DHT11_GPIO_PORT,DHT11_GPIO_PIN,GPIO_PIN_SET)
 #define DHT11_READ_DATA()              HAL_GPIO_ReadPin(DHT11_GPIO_PORT,DHT11_GPIO_PIN)
 
-
+typedef struct {
+    uint16_t temperature;
+    uint16_t humidity;
+}DHT11_Data;
 
  
 error_code_t DHT11_Init(void);//初始化DHT11

@@ -1,6 +1,8 @@
 #include "dht11.h"
 #include "error_code.h"
 
+//static  DHT11_Data g_tempAndhumi;
+
 static void DHT11_Mode(uint8_t mode)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;

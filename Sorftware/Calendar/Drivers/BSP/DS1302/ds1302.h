@@ -118,6 +118,7 @@ void ds1302_init(void);
 Time_s *get_time_contx(void);
 
 // void ds1302_get_time(Time_s *time);
+Time_s *ds1302_get_time(void);
 error_code_t ds1302_set_time(Time_s *time);
 void ds1302_clear_ram(void);
 uint8_t ds1302_read_ram(const uint8_t addr);

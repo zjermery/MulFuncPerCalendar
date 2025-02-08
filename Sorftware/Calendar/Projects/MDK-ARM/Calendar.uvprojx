@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers\;..\..\User;..\..\Middlewares;..\..\Drivers\BSP\OLED;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\usart;..\..\Drivers\BSP\DS1302;..\..\Drivers\BSP\DH11;..\..\Drivers\Lib;..\..\Drivers\BSP\BEEP</IncludePath>
+              <IncludePath>..\..\Drivers\CMSIS\Device\ST\STM32F1xx\Include;..\..\Drivers\STM32F1xx_HAL_Driver\Inc;..\..\Drivers\CMSIS\Include;..\..\Drivers\;..\..\User;..\..\Middlewares;..\..\Drivers\BSP\OLED;..\..\Drivers\SYSTEM\sys;..\..\Drivers\SYSTEM\delay;..\..\Drivers\SYSTEM\usart;..\..\Drivers\BSP\DS1302;..\..\Drivers\BSP\DH11;..\..\Drivers\Lib;..\..\Drivers\BSP\BEEP;..\..\Drivers\APP\APP_OLED</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -529,11 +529,6 @@
               <FilePath>..\..\Drivers\BSP\DS1302\ds1302.c</FilePath>
             </File>
             <File>
-              <FileName>bsp_oled.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Drivers\BSP\OLED\bsp_oled.c</FilePath>
-            </File>
-            <File>
               <FileName>dht11.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\DH11\dht11.c</FilePath>
@@ -542,6 +537,11 @@
               <FileName>beep.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\BEEP\beep.c</FilePath>
+            </File>
+            <File>
+              <FileName>gui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\BSP\OLED\gui.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -580,6 +580,16 @@
               <FileName>readme.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\readme.txt</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/APP</GroupName>
+          <Files>
+            <File>
+              <FileName>app_ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Drivers\APP\APP_OLED\app_ui.c</FilePath>
             </File>
           </Files>
         </Group>

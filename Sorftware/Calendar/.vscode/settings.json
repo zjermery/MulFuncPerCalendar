@@ -27,6 +27,11 @@
         "calendar.h": "c",
         "bsp_oled.h": "c",
         "dht11.h": "c",
-        "error_code.h": "c"
+        "error_code.h": "c",
+        "spi.h": "c",
+        "gui.h": "c",
+        "rtc.h": "c",
+        "beep.h": "c",
+        "app_ui.h": "c"
     }
 }
