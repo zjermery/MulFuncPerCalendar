@@ -19,16 +19,70 @@
 #include "./BSP/BEEP/beep.h"
 #include "gui.h"
 #include "app_ui.h"
-
+#include "lib_menu.h"
+#include "lib_language.h"
+#include "string.h"
 extern unsigned char BMP1[];
 extern const unsigned char thermometer23x44[138];
 
 extern unsigned int rec_data[4];
 
-//Time_s newtime;
+
 
 uint32_t tempAndhumi = 0;
 //uint8_t buf[4];
+
+
+// 扩展数据为图标文件名字，每个菜单选项描述为文本ID
+LibMenuList_t sg_MainMenuTable[] = 
+{
+#if 0
+    LIB_MENU_ITEM_BIND(TEXT_MUSIC,  Hmi_MusicEnter, Hmi_MusicExit, Hmi_MusicLoad, Hmi_MusicTask, (MenuImage_t *)&sgc_MusicImage),
+  
+    LIB_MENU_ITEM_BIND(TEXT_VIDEO,  NULL, Hmi_VideoExit, Hmi_VideoLoad, Hmi_VideoTask, (MenuImage_t *)&sgc_VideoImage),
+  
+    LIB_MENU_ITEM_BIND(TEXT_CAMERA,  Hmi_CameraEnter, Hmi_CameraExit, Hmi_CameraLoad, Hmi_CameraTask, (MenuImage_t *)&sgc_CameraImage),
+  
+    LIB_MENU_ITEM_BIND(TEXT_SETTING,  Hmi_SetEnter, Hmi_SetExit, Hmi_SetLoad,   Hmi_SetTask, (MenuImage_t *)&sgc_SettingImage),
+#endif
+#if 1
+    LIB_MENU_ITEM_BIND(TEXT_MUSIC,  NULL, NULL, NULL, NULL, NULL),
+  
+    LIB_MENU_ITEM_BIND(TEXT_VIDEO,  NULL, NULL, NULL, NULL, NULL),
+  
+    LIB_MENU_ITEM_BIND(TEXT_CAMERA,  NULL, NULL, NULL, NULL, NULL),
+  
+    LIB_MENU_ITEM_BIND(TEXT_SETTING,  NULL, NULL, NULL,   NULL, NULL),
+#endif
+};
+
+/* 主菜单显示效果 */
+static void ShowMainMenu(LibMenuShow_t *ptShowInfo)
+{
+    printf("show main menu\n");
+#if 1
+    const char *pszSelectDesc = get_text((TextId_e)ptShowInfo->uItemsListDesc[ptShowInfo->selectItem].textId);
+
+    char idx = (128 - 6 * strlen(pszSelectDesc)) / 2;
+
+    // cotOled_DrawGraphic(40, 0, (const char *)ptShowInfo->pItemsListExtendData[ptShowInfo->selectItem], 1);
+    // cotOled_SetText(0, 50, "                ", 0, FONT_12X12);
+    // GUI_ShowString(0,50,(uint8_t*)"hello world",16,1);
+    // cotOled_SetText(idx, 50, pszSelectDesc, 0, FONT_12X12);
+
+    DisplayShowTempHumi1();
+#endif
+}
+
+void Hmi_EnterMainHmi(const LibMenuItemInfo_t *pItemInfo)
+{
+    printf("enter main hmi\n");
+    libMenu_Bind(sg_MainMenuTable, LIB_GET_MENU_NUM(sg_MainMenuTable), ShowMainMenu);
+}
+
+// static LibMainMenuCfg_t sg_tMainMenu = {"主菜单", Hmi_EnterMainHmi, NULL, NULL, NULL};
+
+
 int main(void)
 {
     HAL_Init();                         /* 初始化HAL库 */
@@ -40,23 +94,26 @@ int main(void)
 	ds1302_init(); 
     DHT11_Init();
 	beep_init();
-	printf("init finish\n");
 
+    set_language(SYSTEM_LANGUAGE_CHINESE);  // 默认设置中文
+    printf("language set to chinese\n");
+    LibMainMenuCfg_t tMainMenu = LIB_MENU_ITEM_BIND(TEXT_MAIN_MENU, Hmi_EnterMainHmi, NULL, NULL, NULL, NULL);
+    printf("main menu bind\n");    
+    int ret = libMenu_Init(&tMainMenu);
+    printf("ret:%d\n", ret);
+	printf("init finish\n");
+    libMenu_MainEnter();
     while (1)
     {
-        OLED_Display();
-//        GUI_ShowCHinese(0,0,16,"温湿度℃",1);
-//        GUI_ShowCHineseAndASCII(0,0,"温23湿度℃",1);
-        // DHT11_Read_Data(&tempAndhumi); 
-        DisplayShowTimeData();
-        // DisplayShowTempHumi(tempAndhumi);
-//        delay_ms(1000);
-        // OLED_Clear(0);  
+        
+
+        // if (timeFlag)
+        // {
+        //     timeFlag = 0;
+            libMenu_Task(); // 周期调度
+        // } 
     }
 }
-
-
-
 
 
 

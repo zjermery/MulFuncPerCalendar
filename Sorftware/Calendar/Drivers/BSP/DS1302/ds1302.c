@@ -437,7 +437,7 @@ void ds1302_init(void)
 
     temp_reg = read_data(DS1302_RAM_ADDR_START);  //先读TIME[7]地址的值
 
-    printf("temp_reg= 0X%x\r\n",temp_reg);
+    // printf("temp_reg= 0X%x\r\n",temp_reg);
     if(temp_reg == 0xFF)       //检验该地址的值是否被更改
     {        
         ;      //如果已经被更该就不用初始化了，说明曾经初始化了

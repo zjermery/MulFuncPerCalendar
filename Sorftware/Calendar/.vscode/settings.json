@@ -32,6 +32,13 @@
         "gui.h": "c",
         "rtc.h": "c",
         "beep.h": "c",
-        "app_ui.h": "c"
+        "app_ui.h": "c",
+        "stdbool.h": "c",
+        "menu.h": "c",
+        "cstdarg": "c",
+        "stdarg.h": "c",
+        "lib_menu.h": "c",
+        "stdint.h": "c",
+        "language.h": "c"
     }
 }
