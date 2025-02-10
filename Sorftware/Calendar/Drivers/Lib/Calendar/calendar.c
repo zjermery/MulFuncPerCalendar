@@ -569,23 +569,23 @@ void GetChinaCalendarStr(uint16_t year,uint8_t month,uint8_t day,uint8_t *str)
 	uint8_t NLyear[4];
 	uint8_t SEyear;
 	
-	StrCopy(&str[0],(u8 *)"甲子年正月初一",15);
-	if(GetChinaCalendar(year,month,day,(u8 *)NLyear)==0)	
+	StrCopy(&str[0],(uint8_t *)"甲子年正月初一",15);
+	if(GetChinaCalendar(year,month,day,(uint8_t *)NLyear)==0)	
 		return;
 	GetSkyEarth(NLyear[0]*100+NLyear[1],&SEyear);
-	StrCopy(&str[0],(u8 *)  sky[SEyear%10],2);	//  甲
-	StrCopy(&str[2],(u8 *)earth[SEyear%12],2);	//  子	
+	StrCopy(&str[0],(uint8_t *)  sky[SEyear%10],2);	//  甲
+	StrCopy(&str[2],(uint8_t *)earth[SEyear%12],2);	//  子	
 	
 	if(NLyear[2]==1)	
-		StrCopy(&str[6],(u8 *)"正",2);
+		StrCopy(&str[6],(uint8_t *)"正",2);
 	else				
-		StrCopy(&str[6],(u8 *)monthcode[NLyear[2]-1],2);		
+		StrCopy(&str[6],(uint8_t *)monthcode[NLyear[2]-1],2);		
 	
 	if(NLyear[3]>10) 	
-		StrCopy(&str[10],(u8 *)nongliday[NLyear[3]/10],2);	
+		StrCopy(&str[10],(uint8_t *)nongliday[NLyear[3]/10],2);	
 	else				
-		StrCopy(&str[10],(u8 *)"初",2);
-	StrCopy(&str[12],(u8 *)monthcode[(NLyear[3]-1)%10],2);
+		StrCopy(&str[10],(uint8_t *)"初",2);
+	StrCopy(&str[12],(uint8_t *)monthcode[(NLyear[3]-1)%10],2);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -599,9 +599,9 @@ void GetChinaCalendarStr(uint16_t year,uint8_t month,uint8_t day,uint8_t *str)
 // 输　出:  1           成功
 //          0           失败																			  
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-u8 GetJieQi(u16 year,u8 month,u8 day,u8 *JQdate)
+uint8_t GetJieQi(uint16_t year,uint8_t month,uint8_t day,uint8_t *JQdate)
 {
-	u8 bak1,value,JQ;
+	uint8_t bak1,value,JQ;
 
 	if((year<2000)||(year>2050))     
 		return 0;//节气表的范围限制
@@ -625,7 +625,7 @@ u8 GetJieQi(u16 year,u8 month,u8 day,u8 *JQdate)
 	}
 	return 1;
 }
-static u8 const MonthDayMax[]={31,28,31,30,31,30,31,31,30,31,30,31,};
+static uint8_t const MonthDayMax[]={31,28,31,30,31,30,31,31,30,31,30,31,};
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 函数名称:GetJieQiStr
 // 功能描述:输入公历日期得到24节气字符串	
@@ -637,9 +637,9 @@ static u8 const MonthDayMax[]={31,28,31,30,31,30,31,31,30,31,30,31,};
 // 输　出:  1           成功
 //          0           失败																			  
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-u8 GetJieQiStr(u16 year,u8 month,u8 day,u8 *str)
+uint8_t GetJieQiStr(uint16_t year,uint8_t month,uint8_t day,uint8_t *str)
 {
-	u8 JQdate,JQ,MaxDay;
+	uint8_t JQdate,JQ,MaxDay;
 
 	if(GetJieQi(year,month,day,&JQdate)==0)	
 		return 0;
@@ -650,21 +650,21 @@ u8 GetJieQiStr(u16 year,u8 month,u8 day,u8 *str)
 
 	if(day==JQdate)                                 //今天正是一个节气日
 	{
-		StrCopy(str,(u8 *)JieQiStr[JQ],5);
+		StrCopy(str,(uint8_t *)JieQiStr[JQ],5);
 		return 1;
 	}
 	                                                //今天不是一个节气日
-	StrCopy(str,(u8 *)"离立冬还有??天",15);
+	StrCopy(str,(uint8_t *)"离立冬还有??天",15);
 	if(day<JQdate)                                  //如果今天日期小于本月的节气日期
 	{
-		StrCopy(&str[2],(u8 *)JieQiStr[JQ],4);
+		StrCopy(&str[2],(uint8_t *)JieQiStr[JQ],4);
 		day=JQdate-day;
 	} 
 	else                                            //如果今天日期大于本月的节气日期
 	{
              if((JQ+1) >23)  
 				 return 0;
-		StrCopy(&str[2],(u8 *)JieQiStr[JQ+1],4);
+		StrCopy(&str[2],(uint8_t *)JieQiStr[JQ+1],4);
 		if(day < 15)
 		{
 			GetJieQi(year,month,15,&JQdate);

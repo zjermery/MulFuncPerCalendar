@@ -27,12 +27,12 @@ extern const unsigned char thermometer23x44[138];
 
 extern unsigned int rec_data[4];
 
-
+#define USE_MENU_TASK 0
 
 uint32_t tempAndhumi = 0;
 //uint8_t buf[4];
 
-
+#if USE_MENU_TASK
 // 扩展数据为图标文件名字，每个菜单选项描述为文本ID
 LibMenuList_t sg_MainMenuTable[] = 
 {
@@ -70,7 +70,8 @@ static void ShowMainMenu(LibMenuShow_t *ptShowInfo)
     // GUI_ShowString(0,50,(uint8_t*)"hello world",16,1);
     // cotOled_SetText(idx, 50, pszSelectDesc, 0, FONT_12X12);
 
-    DisplayShowTempHumi1();
+    // DisplayShowTempHumi1();
+    DisplayshowCursor();
 #endif
 }
 
@@ -82,6 +83,8 @@ void Hmi_EnterMainHmi(const LibMenuItemInfo_t *pItemInfo)
 
 // static LibMainMenuCfg_t sg_tMainMenu = {"主菜单", Hmi_EnterMainHmi, NULL, NULL, NULL};
 
+
+#endif
 
 int main(void)
 {
@@ -95,14 +98,17 @@ int main(void)
     DHT11_Init();
 	beep_init();
 
+#if USE_MENU_TASK
+
     set_language(SYSTEM_LANGUAGE_CHINESE);  // 默认设置中文
     printf("language set to chinese\n");
+
     LibMainMenuCfg_t tMainMenu = LIB_MENU_ITEM_BIND(TEXT_MAIN_MENU, Hmi_EnterMainHmi, NULL, NULL, NULL, NULL);
-    printf("main menu bind\n");    
+  
     int ret = libMenu_Init(&tMainMenu);
-    printf("ret:%d\n", ret);
-	printf("init finish\n");
     libMenu_MainEnter();
+#endif
+
     while (1)
     {
         
@@ -110,7 +116,9 @@ int main(void)
         // if (timeFlag)
         // {
         //     timeFlag = 0;
+        #if USE_MENU_TASK
             libMenu_Task(); // 周期调度
+        #endif
         // } 
     }
 }

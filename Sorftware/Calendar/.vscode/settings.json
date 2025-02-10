@@ -39,6 +39,8 @@
         "stdarg.h": "c",
         "lib_menu.h": "c",
         "stdint.h": "c",
-        "language.h": "c"
+        "language.h": "c",
+        "stdlib.h": "c",
+        "type_traits": "c"
     }
 }

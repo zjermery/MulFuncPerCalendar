@@ -17,6 +17,8 @@
 error_code_t DisplayShowTempHumi1(void);
 void DisplayShowTimeData(void);
 error_code_t DisplayShowTempHumi(uint32_t tempAndhumi);
+void DisplayshowCursor(void);
+
 #endif
 
 
