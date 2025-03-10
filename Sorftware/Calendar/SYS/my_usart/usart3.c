@@ -103,8 +103,6 @@ void Bluetooth_Analyse(void)
             OperateMode=0;
             System.ClearFlag=1;
         }
-
-        
         else if(strstr((const char*)USART3_RX_BUF,"Alarm1"))
         {
             Alarm1.Hour  =atoi(mid(dest,(char*)USART3_RX_BUF,2,6));
