@@ -211,12 +211,12 @@ void OLED_ShowChar(u8 x,u8 y,u8 chr,u8 Char_Size)
 			for(i=0;i<8;i++)
 			OLED_WR_Byte(F8X16[c*16+i+8],OLED_DATA);
 			}
-			else {	
-				OLED_Set_Pos(x,y);
-				for(i=0;i<6;i++)
-				OLED_WR_Byte(F6x8[c][i],OLED_DATA);
+			// else {	
+			// 	OLED_Set_Pos(x,y);
+			// 	for(i=0;i<6;i++)
+			// 	OLED_WR_Byte(F6x8[c][i],OLED_DATA);
 				
-			}
+			// }
 }
 //m^n函数
 u32 oled_pow(u8 m,u8 n)

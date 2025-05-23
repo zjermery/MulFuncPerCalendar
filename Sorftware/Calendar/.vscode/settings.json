@@ -8,6 +8,16 @@
         "math.h": "c",
         "time.h": "c",
         "solar.h": "c",
-        "bsp_beep.h": "c"
+        "bsp_beep.h": "c",
+        "rtc.h": "c",
+        "calendar.h": "c",
+        "key.h": "c",
+        "myrtc.h": "c",
+        "oledfont.h": "c",
+        "stm32f10x_conf.h": "c",
+        "gy30iic.h": "c",
+        "bsp_oled_iic.h": "c",
+        "led.h": "c",
+        "my_usart1.h": "c"
     }
 }

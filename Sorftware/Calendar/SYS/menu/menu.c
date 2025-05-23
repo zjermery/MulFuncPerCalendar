@@ -1,5 +1,6 @@
 #include "sys.h"
 #include "solar.h"
+#include "calendar.h"
 uint8_t OperateMode=0;//运行模式标志位
 static uint8_t InterFace=0;//页面显示标志位,若一页显示不完所有信息，则分两页显示，0显示第一页，1显示第二页
 ALARM Alarm1;
@@ -58,6 +59,24 @@ void Mode_Decide(void)//模式判定
     
 }
 
+void showChinaCalendar(uint16_t year,uint8_t month,uint8_t day)
+{
+	uint8_t NLyear[4];
+	uint8_t SEyear;
+	
+	if(GetChinaCalendar(year,month,day,(uint8_t *)NLyear)==0)	return;
+	GetSkyEarth(NLyear[0]*100+NLyear[1],&SEyear);
+	oled_ShowCHinese(4,4,(SEyear%10)+58);//  甲
+    oled_ShowCHinese(20,4,(SEyear%12)+68);//  子
+    oled_ShowCHinese(36,4,19);//年
+	if(NLyear[2]==1)	oled_ShowCHinese(52,4,17);//正
+	else				oled_ShowCHinese(52,4,(NLyear[2]-1)+80);		
+	oled_ShowCHinese(68,4,9);//月
+	if(NLyear[3]>10) 	oled_ShowCHinese(84,4,(NLyear[3]/10)+92);	
+	else				oled_ShowCHinese(84,4,92); //初
+    oled_ShowCHinese(100,4,((NLyear[3]-1)%10)+79);
+}
+
 /******************   	  
 功能：显示界面
 参数：无
@@ -73,28 +92,28 @@ void Inform_Show(void)
     Day=MyRTC_Time[2];
     uint8_t temp = get_day_of_solar(Month,Day,Year);
     
-    oled_ShowCHinese(40,0,30);
-    oled_ShowCHinese(56,0,31);
-    oled_ShowCHinese(72,0,32);//万年历
+    oled_ShowCHinese(40,0,18);
+    oled_ShowCHinese(56,0,19);
+    oled_ShowCHinese(72,0,20);//万年历
     switch(InterFace)    
     {
         case 1 :
             oled_ShowNum(8,2,MyRTC_Time[0],4,16);
-            oled_ShowCHinese(40,2,20);//年
+            oled_ShowCHinese(40,2,8);//年
             oled_ShowNum(56,2,MyRTC_Time[1],2,16);
-            oled_ShowCHinese(72,2,21);//月
+            oled_ShowCHinese(72,2,9);//月
             oled_ShowNum(88,2,MyRTC_Time[2],2,16);
-            oled_ShowCHinese(104,2,22);//日
+            oled_ShowCHinese(104,2,10);//日
 
             oled_ShowNum(0,4,MyRTC_Time[3],4,16);
-            oled_ShowCHinese(32,4,23);//时
+            oled_ShowCHinese(32,4,11);//时
             oled_ShowNum(48,4,MyRTC_Time[4],2,16);
-            oled_ShowCHinese(64,4,24);//分
+            oled_ShowCHinese(64,4,12);//分
             oled_ShowNum(80,4,MyRTC_Time[5],2,16);
-            oled_ShowCHinese(96,4,25);//秒
+            oled_ShowCHinese(96,4,13);//秒
 
-            oled_ShowCHinese(40,6,44);
-            oled_ShowCHinese(56,6,45);
+            oled_ShowCHinese(40,6,25);
+            oled_ShowCHinese(56,6,24);
 
             if(1==Month)
             {
@@ -110,20 +129,20 @@ void Inform_Show(void)
 
             switch(WeekDay)//光标显示
             {
-                case 1:oled_ShowCHinese(72,6,46);break;
-                case 2:oled_ShowCHinese(72,6,47);break;
-                case 3:oled_ShowCHinese(72,6,48);break;
-                case 4:oled_ShowCHinese(72,6,49);break;    
-                case 5:oled_ShowCHinese(72,6,50);break;
-                case 6:oled_ShowCHinese(72,6,51);break;
-                case 7:oled_ShowCHinese(72,6,42);break;         
+                case 1:oled_ShowCHinese(72,6,79+1);break;
+                case 2:oled_ShowCHinese(72,6,79+2);break;
+                case 3:oled_ShowCHinese(72,6,79+3);break;
+                case 4:oled_ShowCHinese(72,6,79+4);break;    
+                case 5:oled_ShowCHinese(72,6,79+5);break;
+                case 6:oled_ShowCHinese(72,6,79+6);break;
+                case 7:oled_ShowCHinese(72,6,79+7);break;         
             }
         break; 
     
         case 2:
-            oled_ShowCHinese(40,0,30);
-            oled_ShowCHinese(56,0,31);
-            oled_ShowCHinese(72,0,32);//万年历
+            oled_ShowCHinese(40,0,18);
+            oled_ShowCHinese(56,0,19);
+            oled_ShowCHinese(72,0,20);//万年历
 
             oled_ShowCHinese(0,2,0);
             oled_ShowCHinese(16,2,2);  
@@ -133,8 +152,8 @@ void Inform_Show(void)
             oled_ShowCHinese(16,4,2);
             OLED_ShowChar(32,4,':',16);//湿度
 
-            oled_ShowCHinese(0,6,6);
-            oled_ShowCHinese(16,6,7);
+            oled_ShowCHinese(0,6,4);
+            oled_ShowCHinese(16,6,5);
             OLED_ShowChar(32,6,':',16);//光照
 
             oled_ShowNum(48,2,dht11Data.temp_int,2,16);
@@ -146,82 +165,82 @@ void Inform_Show(void)
         break;
         case 3:
             oled_ShowNum(8,2,MyRTC_Time[0],4,16);
-            oled_ShowCHinese(40,2,20);//年
+            oled_ShowCHinese(40,2,8);//年
             oled_ShowNum(56,2,MyRTC_Time[1],2,16);
-            oled_ShowCHinese(72,2,21);//月
+            oled_ShowCHinese(72,2,9);//月
             oled_ShowNum(88,2,MyRTC_Time[2],2,16);
-            oled_ShowCHinese(104,2,22);//日
-
-            oled_ShowCHinese(0,5,82);
-            oled_ShowCHinese(16,5,83);
-            OLED_ShowChar(32,5,':',16);//节气
+            oled_ShowCHinese(104,2,10);//日
+            showChinaCalendar(Year,Month,Day);
+            oled_ShowCHinese(4,6,56);
+            oled_ShowCHinese(20,6,57);
+            OLED_ShowChar(35,6,':',16);//节气
             if(temp==1) //立春
-            { oled_ShowCHinese(40,5,52); oled_ShowCHinese(56,5,53);}
+            { oled_ShowCHinese(45,6,52-26); oled_ShowCHinese(60,6,53-26);}
             else if(temp == 2)
-            { oled_ShowCHinese(40,5,54);oled_ShowCHinese(56,5,55);}
+            { oled_ShowCHinese(45,6,54-26);oled_ShowCHinese(60,6,55-26);}
             else if(temp == 3)
-            { oled_ShowCHinese(40,5,56);oled_ShowCHinese(56,5,57);}
+            { oled_ShowCHinese(45,6,56-26);oled_ShowCHinese(60,6,57-26);}
             else if(temp == 4)
-            { oled_ShowCHinese(40,5,53);oled_ShowCHinese(56,5,58);}
+            { oled_ShowCHinese(45,6,53-26);oled_ShowCHinese(60,6,58-26);}
             else if(temp == 5)
-            { oled_ShowCHinese(40,5,59);oled_ShowCHinese(56,5,60);}
+            { oled_ShowCHinese(45,6,59-26);oled_ShowCHinese(60,6,60-26);}
             else if(temp == 6)
-            { oled_ShowCHinese(40,5,61);oled_ShowCHinese(56,5,62);} //谷雨
+            { oled_ShowCHinese(45,6,61-26);oled_ShowCHinese(60,6,62-26);} //谷雨
             else if(temp == 7)
-            { oled_ShowCHinese(40,5,52);oled_ShowCHinese(56,5,63);}
+            { oled_ShowCHinese(45,6,52-26);oled_ShowCHinese(60,6,63-26);}
             else if(temp == 8)
-            { oled_ShowCHinese(40,5,64);oled_ShowCHinese(56,5,65);}
+            { oled_ShowCHinese(45,6,64-26);oled_ShowCHinese(60,6,65-26);}
             else if(temp == 9)
-            { oled_ShowCHinese(40,5,66);oled_ShowCHinese(56,5,67);}
+            { oled_ShowCHinese(45,6,66-26);oled_ShowCHinese(60,6,67-26);}
             else if(temp == 10)
-            { oled_ShowCHinese(40,5,63);oled_ShowCHinese(56,5,68);}
+            { oled_ShowCHinese(45,6,63-26);oled_ShowCHinese(60,6,68-26);}
             else if(temp == 11)
-            { oled_ShowCHinese(40,5,64);oled_ShowCHinese(56,5,69);}
+            { oled_ShowCHinese(45,6,64-26);oled_ShowCHinese(60,6,69-26);}
             else if(temp == 12)
-            { oled_ShowCHinese(40,5,70);oled_ShowCHinese(56,5,69);}
+            { oled_ShowCHinese(45,6,70-26);oled_ShowCHinese(60,6,69-26);}
             else if(temp == 13)
-            { oled_ShowCHinese(40,5,52);oled_ShowCHinese(56,5,71);}
+            { oled_ShowCHinese(45,6,52-26);oled_ShowCHinese(60,6,71-26);}
             else if(temp == 14)
-            { oled_ShowCHinese(40,5,72);oled_ShowCHinese(56,5,69);}
+            { oled_ShowCHinese(45,6,72-26);oled_ShowCHinese(60,6,69-26);}
             else if(temp == 15)
-            { oled_ShowCHinese(40,5,73);oled_ShowCHinese(56,5,74);}
+            { oled_ShowCHinese(45,6,73-26);oled_ShowCHinese(60,6,74-26);}
             else if(temp == 16)
-            { oled_ShowCHinese(40,5,71);oled_ShowCHinese(56,5,76);}
+            { oled_ShowCHinese(45,6,71-26);oled_ShowCHinese(60,6,76-26);}
             else if(temp == 17)
-            { oled_ShowCHinese(40,5,77);oled_ShowCHinese(56,5,74);}
+            { oled_ShowCHinese(45,6,77-26);oled_ShowCHinese(60,6,74-26);}
             else if(temp == 18)
-            { oled_ShowCHinese(40,5,78);oled_ShowCHinese(56,5,79);}
+            { oled_ShowCHinese(45,6,78-26);oled_ShowCHinese(60,6,79-26);}
             else if(temp == 19)
-            { oled_ShowCHinese(40,5,52);oled_ShowCHinese(56,5,80);}
+            { oled_ShowCHinese(45,6,52-26);oled_ShowCHinese(60,6,80-26);}
             else if(temp == 20)
-            { oled_ShowCHinese(40,5,54);oled_ShowCHinese(56,5,55);}
+            { oled_ShowCHinese(45,6,54-26);oled_ShowCHinese(60,6,55-26);}
             else if(temp == 21)
-            { oled_ShowCHinese(40,5,64);oled_ShowCHinese(56,5,81);}
+            { oled_ShowCHinese(45,6,64-26);oled_ShowCHinese(60,6,81-26);}
             else if(temp == 22)
-            { oled_ShowCHinese(40,5,70);oled_ShowCHinese(56,5,81);}
+            { oled_ShowCHinese(45,6,70-26);oled_ShowCHinese(60,6,81-26);}
             else if(temp == 23)
-            { oled_ShowCHinese(40,5,64);oled_ShowCHinese(56,5,77);}
+            { oled_ShowCHinese(45,6,64-26);oled_ShowCHinese(60,6,77-26);}
             else 
-            { oled_ShowCHinese(40,5,70);oled_ShowCHinese(56,5,77);}
+            { oled_ShowCHinese(45,6,70-26);oled_ShowCHinese(60,6,77-26);}
 
         break;
         default:
             oled_ShowNum(8,2,MyRTC_Time[0],4,16);
-            oled_ShowCHinese(40,2,20);//年
+            oled_ShowCHinese(40,2,8);//年
             oled_ShowNum(56,2,MyRTC_Time[1],2,16);
-            oled_ShowCHinese(72,2,21);//月
+            oled_ShowCHinese(72,2,9);//月
             oled_ShowNum(88,2,MyRTC_Time[2],2,16);
-            oled_ShowCHinese(104,2,22);//日
+            oled_ShowCHinese(104,2,10);//日
 
             oled_ShowNum(0,4,MyRTC_Time[3],4,16);
-            oled_ShowCHinese(32,4,23);//时
+            oled_ShowCHinese(32,4,11);//时
             oled_ShowNum(48,4,MyRTC_Time[4],2,16);
-            oled_ShowCHinese(64,4,24);//分
+            oled_ShowCHinese(64,4,12);//分
             oled_ShowNum(80,4,MyRTC_Time[5],2,16);
-            oled_ShowCHinese(96,4,25);//秒
+            oled_ShowCHinese(96,4,13);//秒
 
-            oled_ShowCHinese(40,6,44);
-            oled_ShowCHinese(56,6,45);
+            oled_ShowCHinese(40,6,25);
+            oled_ShowCHinese(56,6,24);
 
             if(1==Month)
             {
@@ -237,15 +256,15 @@ void Inform_Show(void)
 
             switch(WeekDay)//光标显示
             {
-                case 1:oled_ShowCHinese(72,6,46);break;
-                case 2:oled_ShowCHinese(72,6,47);break;
-                case 3:oled_ShowCHinese(72,6,48);break;
-                case 4:oled_ShowCHinese(72,6,49);break;    
-                case 5:oled_ShowCHinese(72,6,50);break;
-                case 6:oled_ShowCHinese(72,6,51);break;
-                case 7:oled_ShowCHinese(72,6,42);break;         
+                case 1:oled_ShowCHinese(72,6,79+1);break;
+                case 2:oled_ShowCHinese(72,6,79+2);break;
+                case 3:oled_ShowCHinese(72,6,79+3);break;
+                case 4:oled_ShowCHinese(72,6,79+4);break;    
+                case 5:oled_ShowCHinese(72,6,79+5);break;
+                case 6:oled_ShowCHinese(72,6,79+6);break;
+                case 7:oled_ShowCHinese(72,6,79+7);break;         
             }
-        break;
+            break; 
     } 
     // if(!InterFace)    
     // {
@@ -310,24 +329,24 @@ void ThresholdSet(void)
     char Alarm3Str[20];
     
     //闹钟设置
-    oled_ShowCHinese(32,0,14);
-    oled_ShowCHinese(48,0,15);
-    oled_ShowCHinese(64,0,26);
-    oled_ShowCHinese(80,0,27);
+    oled_ShowCHinese(32,0,6);
+    oled_ShowCHinese(48,0,7);
+    oled_ShowCHinese(64,0,14);
+    oled_ShowCHinese(80,0,15);
 
     //闹钟1
-    oled_ShowCHinese(8,2,14);
-    oled_ShowCHinese(24,2,15);
+    oled_ShowCHinese(8,2,6);
+    oled_ShowCHinese(24,2,7);
     OLED_ShowChar(40,2,'1',16);
     OLED_ShowChar(48,2,':',16);
     //闹钟2
-    oled_ShowCHinese(8,4,14);
-    oled_ShowCHinese(24,4,15);
+    oled_ShowCHinese(8,4,6);
+    oled_ShowCHinese(24,4,7);
     OLED_ShowChar(40,4,'2',16);
     OLED_ShowChar(48,4,':',16); 
     //闹钟3
-    oled_ShowCHinese(8,6,14);
-    oled_ShowCHinese(24,6,15);
+    oled_ShowCHinese(8,6,6);
+    oled_ShowCHinese(24,6,7);
     OLED_ShowChar(40,6,'3',16);
     OLED_ShowChar(48,6,':',16);    
     /*按键检测*/
@@ -467,17 +486,17 @@ void ThresholdSet(void)
     char Time3Str[20];
     char Time4Str[20]; 
        
-    oled_ShowCHinese(32,0,40);
-    oled_ShowCHinese(48,0,41);
-    oled_ShowCHinese(64,0,28);
-    oled_ShowCHinese(80,0,29);
+    oled_ShowCHinese(32,0,21);
+    oled_ShowCHinese(48,0,22);
+    oled_ShowCHinese(64,0,16);
+    oled_ShowCHinese(80,0,17);
     //时间
-    oled_ShowCHinese(16,2,40);
-    oled_ShowCHinese(32,2,41);
+    oled_ShowCHinese(16,2,21);
+    oled_ShowCHinese(32,2,22);
     OLED_ShowChar(48,2,':',16);
     //日期
-    oled_ShowCHinese(16,4,42);
-    oled_ShowCHinese(32,4,43);
+    oled_ShowCHinese(16,4,23);
+    oled_ShowCHinese(32,4,24);
     OLED_ShowChar(48,4,':',16);    
     
     /*按键检测*/
@@ -599,4 +618,5 @@ void Time_Limit(int8_t* Hour,int8_t* Minutes,int8_t* Second)
     if(* Minutes<0) * Minutes=59;
     if(* Second<0) * Second=59;
 }
+
 

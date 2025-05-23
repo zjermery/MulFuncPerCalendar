@@ -23,10 +23,10 @@ static void RTC_NVIC_Config(void)
 //返回0:正常
 //其他:错误代码
 
-u8 RTC_Init(void)
+uint8_t RTC_Init(void)
 {
 	//检查是不是第一次配置时钟
-	u8 temp=0;
+	uint8_t temp=0;
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);	//使能PWR和BKP外设时钟   
 	PWR_BackupAccessCmd(ENABLE);	//使能后备寄存器访问  
 	if (BKP_ReadBackupRegister(BKP_DR1) != 0x5050)		//从指定的后备寄存器中读出数据:读出了与写入的指定数据不相乎
@@ -66,7 +66,7 @@ u8 RTC_Init(void)
 }		 				    
 //RTC时钟中断
 //每秒触发一次  
-//extern u16 tcnt; 
+//extern uint16_t tcnt; 
 void RTC_IRQHandler(void)
 {		 
 	if (RTC_GetITStatus(RTC_IT_SEC) != RESET)//秒钟中断
@@ -89,7 +89,7 @@ void RTC_IRQHandler(void)
 //非闰年 31 28 31 30 31 30 31 31 30 31 30 31
 //输入:年份
 //输出:该年份是不是闰年.1,是.0,不是
-u8 Is_Leap_Year(u16 year)
+uint8_t Is_Leap_Year(uint16_t year)
 {			  
 	if(year%4==0) //必须能被4整除
 	{ 
@@ -106,12 +106,12 @@ u8 Is_Leap_Year(u16 year)
 //1970~2099年为合法年份
 //返回值:0,成功;其他:错误代码.
 //月份数据表											 
-u8 const table_week[12]={0,3,3,6,1,4,6,2,5,0,3,5}; //月修正数据表	  
+uint8_t const table_week[12]={0,3,3,6,1,4,6,2,5,0,3,5}; //月修正数据表	  
 //平年的月份日期表
-const u8 mon_table[12]={31,28,31,30,31,30,31,31,30,31,30,31};
-u8 RTC_Set(u16 syear,u8 smon,u8 sday,u8 hour,u8 min,u8 sec)
+const uint8_t mon_table[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+uint8_t RTC_Set(uint16_t syear,uint8_t smon,uint8_t sday,uint8_t hour,uint8_t min,uint8_t sec)
 {
-	u16 t;
+	uint16_t t;
 	u32 seccount=0;
 	if(syear<1970||syear>2099)return 1;	   
 	for(t=1970;t<syear;t++)	//把所有年份的秒钟相加
@@ -143,9 +143,9 @@ u8 RTC_Set(u16 syear,u8 smon,u8 sday,u8 hour,u8 min,u8 sec)
 //1970~2099年为合法年份
 //syear,smon,sday,hour,min,sec：闹钟的年月日时分秒   
 //返回值:0,成功;其他:错误代码.
-u8 RTC_Alarm_Set(u16 syear,u8 smon,u8 sday,u8 hour,u8 min,u8 sec)
+uint8_t RTC_Alarm_Set(uint16_t syear,uint8_t smon,uint8_t sday,uint8_t hour,uint8_t min,uint8_t sec)
 {
-	u16 t;
+	uint16_t t;
 	u32 seccount=0;
 	if(syear<1970||syear>2099)return 1;	   
 	for(t=1970;t<syear;t++)	//把所有年份的秒钟相加
@@ -178,12 +178,12 @@ u8 RTC_Alarm_Set(u16 syear,u8 smon,u8 sday,u8 hour,u8 min,u8 sec)
 
 //得到当前的时间
 //返回值:0,成功;其他:错误代码.
-u8 RTC_Get(void)
+uint8_t RTC_Get(void)
 {
-	static u16 daycnt=0;
+	static uint16_t daycnt=0;
 	u32 timecount=0; 
 	u32 temp=0;
-	u16 temp1=0;	  
+	uint16_t temp1=0;	  
     timecount=RTC_GetCounter();	 
  	temp=timecount/86400;   //得到天数(秒钟数对应的)
 	if(daycnt!=temp)//超过一天了
@@ -230,10 +230,10 @@ u8 RTC_Get(void)
 //功能描述:输入公历日期得到星期(只允许1901-2099年)
 //输入参数：公历年月日 
 //返回值：星期号																						 
-u8 RTC_Get_Week(u16 year,u8 month,u8 day)
+uint8_t RTC_Get_Week(uint16_t year,uint8_t month,uint8_t day)
 {	
-	u16 temp2;
-	u8 yearH,yearL;
+	uint16_t temp2;
+	uint8_t yearH,yearL;
 	
 	yearH=year/100;	yearL=year%100; 
 	// 如果为21世纪,年份数加100  

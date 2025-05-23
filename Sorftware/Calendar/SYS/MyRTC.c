@@ -2,7 +2,7 @@
 #include <time.h>
 #include "MyRTC.h"  
 #include "sys.h"
-uint16_t MyRTC_Time[] = {2023, 1, 1, 23, 59, 55};	//定义全局的时间数组，数组内容分别为年、月、日、时、分、秒
+uint16_t MyRTC_Time[] = {2025, 5, 10, 14, 30, 55};	//定义全局的时间数组，数组内容分别为年、月、日、时、分、秒
 
 void MyRTC_SetTime(void);				//函数声明
 
